@@ -2,12 +2,12 @@ class Event < ApplicationRecord
 
 ## has_one_attached :picture
 
-belongs_to :user admin, class_name: "User"
+belongs_to :user
 
 has_many :attendances # Un événement appartient à un administrateur (utilisateur).
 has_many :users, through: :attendances # Un événement a plusieurs participations, et plusieurs participants (utilisateurs) au travers des participations.
 
-## validates :user_id, presence: true
+validates :user_id, presence: true
 
 validates :start_date,
   presence: true
@@ -49,12 +49,14 @@ private
         errors.add(:duration, "Duration has to be multiple of 5")
       end
     end
+
+    # Méthode pour calculer la end_date de l'event.
+    def end_date
+    	start_date + duration * 60
+    end
 end
 ###########
-# Méthode pour calculer la end_date de l'event.
-# def end_date
-# 	start_date + duration * 60
-# end
+
 
 # def is_coming?(user)
 #   if self.attendances.where(user_id: user.id).count > 0
